@@ -1,0 +1,71 @@
+1. ----------------------------
+ title=Senior Quality Assurance Automation Engineer
+Senior Quality Assurance Automation Engineer
+ company=Sensay
+ description=About the job
+About Sensay
+At Sensay, we're on a mission to shape the future of AI personal Chatbots. As we scale our development team, we’re looking for a Senior Quality Assurance Engineer to lead our efforts in ensuring the highest quality for all our products and feature releases, with a strong emphasis on automated testing to streamline our processes.
+
+Interact with Our Chatbots:
+Get to know our vision by interacting with our HR Lead Chatbot here, and with founder Chatbot, Dan, here.
+About the Role
+As a Senior QA Engineer, you will play a critical role in maintaining the quality and reliability of our AI personal replicas. You will lead the design and implementation of automated testing frameworks, mentor junior team members, and ensure our products meet the highest standards before release. Your expertise will be instrumental in streamlining our QA processes and driving efficiency across the development lifecycle.
+
+What You'll Do
+Design, develop, and maintain automated test frameworks to improve testing efficiency and coverage.
+Collaborate with the development team to understand product requirements and identify potential issues early in the development process.
+Lead the implementation of automated testing for functionality, performance, and security of our applications.
+Conduct regression testing and maintain test documentation to track defects and improvements.
+Mentor and guide junior QA engineers in best practices for automated and manual testing.
+Advocate for quality throughout the development lifecycle and contribute to the continuous improvement of our QA processes.
+Participate in team meetings and provide strategic insights on product quality and testing strategies.
+
+Technical Requirements
+5+ years of experience in software quality assurance, with a strong focus on automated testing.
+Expertise in testing tools and frameworks (e.g., Selenium, Jest, Cypress, Playwright).
+Proficiency in programming languages commonly used in test automation (e.g., Python, JavaScript, Java).
+Strong understanding of Agile methodologies and software development processes.
+Experience with AI/ML products is a huge plus.
+Strong analytical and problem-solving skills with a meticulous attention to detail.
+Bachelor's degree in Computer Science, Engineering, or a related field (or equivalent experience).
+
+Work Environment
+100% remote work (EU timezone ±4 hours).
+True flexibility – work when you're most productive.
+Virtual office on Gather for team collaboration.
+Minimal meetings, maximum productivity.
+
+What We Offer
+Equity opportunities to share in our success.
+Flexible working hours for work-life balance.
+Clear career progression paths with opportunities to lead and innovate.
+A diverse, inclusive environment that values autonomy and creativity.
+
+Join Us
+If you're a seasoned QA professional passionate about quality and want to make a significant impact in the world of AI, we’d love to hear from you! Visit sensay.io to learn more about our mission and apply today.
+ link=https://www.linkedin.com/jobs/view/4292872269/
+2. ----------------------------
+ title=Senior Test Automation Engineer
+Senior Test Automation Engineer with verification
+ company=Barclays
+ location=Prague, Czechia (Hybrid)
+ description=About the job
+Join us as a Senior Test Automation Engineer at Barclays, as we are looking for an expert in automated testing technology to help lead our team of equities valuation software developers in delivering middleware solutions of provably high quality. Join us to quickly understand our current environment and guide the implementation and delivery of world class, business critical solutions. You’ll be excited about inspiring and collaborating with the owners of our client systems, our back-end providers, and our internal development team to help us achieve this.
+
+To be successful as a Senior Test Automation Engineer, you should have experience with:
+
+• Delivering manual and automation testing solutions in a complex business area with emphasis on architecting, maintaining, and executing automated tests
+• Java programming language for automation testing together with Selenium, familiarity with build tools such as Maven or Gradle
+• Middleware and messaging systems
+
+Some other highly valued skills may include:
+
+• Proficiency with CI/CD tools
+• Previous project experience in banking environment or financial services domain
+• Previous exposure to leading a smaller team
+
+You may be assessed on the key critical skills relevant for success in role, such as risk and controls, change and transformation, business acumen strategic thinking and digital and technology, as well as job-specific technical skills.
+
+This role will be based in our Prague office.
+ link=https://www.linkedin.com/jobs/view/4294462931/
+

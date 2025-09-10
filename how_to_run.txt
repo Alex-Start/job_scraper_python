@@ -1,0 +1,9 @@
+How to Run
+Install dependencies: ...
+Configuration:
+Setup relevant search_url and filters in main.py
+Run it:
+python main.py
+
+Log into LinkedIn manually when the browser opens (solve CAPTCHA if shown).
+The script will scrape jobs and save them in linkedin_job.txt.
