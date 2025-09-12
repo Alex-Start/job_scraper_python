@@ -25,6 +25,7 @@ def run_scraper(scraper, filters, storage, logger):
     while True:
         new_jobs = scraper.scrape_jobs(existing_links)
         storage.save_jobs_to_file(new_jobs, existing_links)
+        existing_links.update({job["link"] for job in new_jobs})
         all_jobs.extend(new_jobs)
         if not scraper.go_to_next_page():
             break
