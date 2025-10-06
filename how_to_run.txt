@@ -1,5 +1,14 @@
 How to Run
-Install dependencies: ...
+create new virtual env.:
+  python -m venv venv
+  ps:>  .\venv\Scripts\Activate
+Install dependencies:
+  # install logger project
+  .\venv\Scripts\activate
+  pip install -e ../logger_project
+  # install additional libs
+  pip install selenium selenium-stealth
+  pip install requests beautifulsoup4
 Configuration:
 Setup relevant search_url and filters in main.py
 Run it:
