@@ -39,6 +39,8 @@ def run_scraper(scraper, filters, storage, logger):
     scraper.driver_quit()
 
 def createDouXhrLoadUrl(url):
+    if url == None:
+        return ""
     parts = urlsplit(url)
     # parts.path -> '/vacancies/'
 
