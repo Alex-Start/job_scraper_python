@@ -88,7 +88,7 @@ if __name__ == "__main__":
         site_name = scraper_info[0].lower()
         logger = LoggerHelper.get_logger(scraper_info[0].lower())
 
-        MUST_HAVE_TITLE = ["Test Automation", "Quality Assurance", "Software Quality Engineer", r"\bQA\b", r"\bAQA\b", "QA Automation", "QA Tester", "Automation Test Engineer", "in Test", "SDET"]
+        MUST_HAVE_TITLE = ["Test Automation", "Quality Assurance", "Software Quality Engineer", r"\bQA\b", r"\bAQA\b", "QA Automation", "QA Tester", "Test Engineer", "in Test", "SDET", "Testing"]
         EXCLUDE_TITLE = ["Python", "C#", "iOS"]
         MUST_HAVE_TEXT = [r"\bJava\b"]  # regex with word boundary
         OPTIONAL_TEXT = [r"\bJava\b", "Cucumber", r"\bSQL\b", "API", "Selenium", "TestNG", "TeamCity"]
@@ -101,7 +101,7 @@ if __name__ == "__main__":
 
         # Site-specific filter setup
         if site_name == LINKEDIN.lower():
-            filters.set_must_have_location(["Prague", "Czechia (Remote)", "European Union (Remote)"])
+            filters.set_must_have_location(["Prague", r"Czechia \(Remote\)", r"European Union \(Remote\)"])
             search_url = args.url or "https://www.linkedin.com/jobs/collections/recommended/?discover=recommended"
             ajax_url = ""
         elif site_name == DOU.lower():
