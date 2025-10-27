@@ -23,13 +23,17 @@ def run_scraper(scraper, filters, storage, logger):
 
     input("👉 Log in if needed and press Enter...")
 
-    existing_links = storage.load_existing_jobs()
+    existing_links = storage[0].load_existing_jobs()
+    if len(storage)>1:
+        existing_links_matched_title = storage[1].load_existing_jobs()
     all_jobs = []
     while True:
         new_jobs = scraper.scrape_jobs(existing_links)
-        storage.save_jobs_to_file(new_jobs, existing_links)
-        existing_links.update({job["link"] for job in new_jobs})
-        all_jobs.extend(new_jobs)
+        if len(new_jobs)>1:
+            storage[1].save_jobs_to_file(new_jobs[1], existing_links_matched_title)
+        storage[0].save_jobs_to_file(new_jobs[0], existing_links)
+        existing_links.update({job["link"] for job in new_jobs[0]})
+        all_jobs.extend(new_jobs[0])
         if not scraper.go_to_next_page():
             break
 
@@ -88,8 +92,8 @@ if __name__ == "__main__":
         site_name = scraper_info[0].lower()
         logger = LoggerHelper.get_logger(scraper_info[0].lower())
 
-        MUST_HAVE_TITLE = ["Test Automation", "Quality Assurance", "Software Quality Engineer", r"\bQA\b", r"\bAQA\b", "QA Automation", "QA Tester", "Test Engineer", "in Test", "SDET", "Testing"]
-        EXCLUDE_TITLE = ["Python", "C#", "iOS"]
+        MUST_HAVE_TITLE = ["Test Automation", "Quality Assurance", "Quality Engineer", r"\bQA\b", r"\bAQA\b", "QA Automation", "QA Tester", "Test Engineer", "in Test", "SDET", "Testing", "Automation Engineer"]
+        EXCLUDE_TITLE = ["Python", "C#", "iOS", "JavaScript"]
         MUST_HAVE_TEXT = [r"\bJava\b"]  # regex with word boundary
         OPTIONAL_TEXT = [r"\bJava\b", "Cucumber", r"\bSQL\b", "API", "Selenium", "TestNG", "TeamCity"]
 
@@ -108,8 +112,10 @@ if __name__ == "__main__":
             filters.set_must_have_location(["віддалено"])
             search_url = args.url or "https://jobs.dou.ua/vacancies/?category=QA"
             ajax_url = createDouXhrLoadUrl(args.url) or "https://jobs.dou.ua/vacancies/xhr-load/?category=QA" #TODO need to use args.url properly
+        else:
+            sys.exit()
 
-        storage = Storage(logger, f"{site_name}.txt")
+        storage = (Storage(logger, f"{site_name}.txt"), Storage(logger, f"{site_name}_matched_title.txt"))
         scraper = scraper_info[1](filters, logger)
         scraper.init_url(search_url, ajax_url)
         run_scraper(scraper, filters, storage, logger)

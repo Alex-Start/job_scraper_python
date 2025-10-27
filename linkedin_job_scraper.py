@@ -33,6 +33,7 @@ class LinkedInJobScraper(BaseJobScraper):
    
     def init_url(self, search_url, axaj_url):
         self.SEARCH_URL = search_url
+        self.logger.info(f"Search URL: {search_url}")
 
     def setup_driver(self):
         # ----------------------------------
@@ -104,11 +105,33 @@ class LinkedInJobScraper(BaseJobScraper):
         except:
             return False
 
+    @staticmethod
+    def add_job(jobs_list, title, company_name, location, description, link):
+        """
+        Adds a job entry to the given list in a consistent format.
+    
+        Args:
+            jobs_list (list): The list to append the job to.
+            title (str): Job title.
+            company_name (str): Company name.
+            location (str): Job location.
+            link (str): URL to the job posting.
+            description (str, optional): Job description (default: "").
+        """
+        jobs_list.append({
+            "title": title,
+            "company": company_name,
+            "location": location,
+            "description": description,
+            "link": link
+        })
+
     # -----------------------------------
     # SCRAPING
     # -----------------------------------
     def scrape_jobs(self, existing_links):
         jobs = []
+        jobs_matched_title = []
 
         # Scroll to load all jobs on the first page
         #load_all_jobs(driver)
@@ -120,6 +143,7 @@ class LinkedInJobScraper(BaseJobScraper):
     
         for i, card in enumerate(job_cards):
             try:
+                self.logger.info("-----------")
                 self.driver.execute_script("arguments[0].scrollIntoView(true);", card)
                 human_delay(2, 4)
 
@@ -139,6 +163,9 @@ class LinkedInJobScraper(BaseJobScraper):
                 company_elem = card.find_element(By.XPATH, ".//div[contains(@class,'artdeco-entity-lockup__subtitle')]")#".artdeco-entity-lockup__subtitle span"
                 company_name = company_elem.text.strip()
 
+                self.logger.info(f"\n[{i+1}] {title} @ {company_name}")
+                self.logger.info(f"🔗 {link}")
+
                 if not self.filters.job_matches_title(title):
                     self.logger.info(f"[{i+1}] ❌ {title} @ {company_name} : by title (skipped)")
                     continue
@@ -149,13 +176,12 @@ class LinkedInJobScraper(BaseJobScraper):
 
                 if not self.filters.job_matches_location(location):
                     self.logger.info(f"[{i+1}] ❌ {title} @ {company_name} : by location (skipped)")
+                    self.add_job(jobs_matched_title, title, company_name, location, "", link)
                     continue
-
-                self.logger.info(f"\n[{i+1}] {title} @ {company_name}")
-                self.logger.info(f"🔗 {link}")
 
                 if link in existing_links:
                     self.logger.info(f"[{i+1}] ⏭ Already reviewed: {title} @ {company_name}")
+                    self.add_job(jobs_matched_title, title, company_name, location, "", link)
                     continue
 
                 # --- Click to open job ---
@@ -181,6 +207,7 @@ class LinkedInJobScraper(BaseJobScraper):
                     self.logger.info(f"[{i+1}] ✅ {title} @ {company_name} (MATCHED)")
                 else:
                     self.logger.info(f"[{i+1}] ❌ {title} @ {company_name} (skipped)")
+                    self.add_job(jobs_matched_title, title, company_name, location, description, link)
 
                 human_delay(5, 12)
 
@@ -188,7 +215,7 @@ class LinkedInJobScraper(BaseJobScraper):
                 self.logger.info(f"⚠️ Error reading job {i+1}: {e}")
                 continue
 
-        return jobs
+        return (jobs, jobs_matched_title)
 
     def detect_captcha(self):
         """Check if a CAPTCHA is present"""
