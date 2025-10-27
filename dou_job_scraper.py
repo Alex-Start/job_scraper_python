@@ -161,4 +161,4 @@ class DouJobScraper(BaseJobScraper):
             jobs.append(job)
             self.logger.info(f"✅ Match found: {title} @ {company_name}")
 
-        return jobs
+        return (jobs, )
