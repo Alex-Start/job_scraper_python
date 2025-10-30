@@ -31,6 +31,7 @@ def run_scraper(scraper, filters, storage, logger):
         new_jobs = scraper.scrape_jobs(existing_links)
         if len(new_jobs)>1:
             storage[1].save_jobs_to_file(new_jobs[1], existing_links_matched_title)
+            existing_links_matched_title.update({job["link"] for job in new_jobs[1]})
         storage[0].save_jobs_to_file(new_jobs[0], existing_links)
         existing_links.update({job["link"] for job in new_jobs[0]})
         all_jobs.extend(new_jobs[0])
