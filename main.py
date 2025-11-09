@@ -29,12 +29,17 @@ def run_scraper(scraper, filters, storage, logger):
     all_jobs = []
     while True:
         new_jobs = scraper.scrape_jobs(existing_links)
-        if len(new_jobs)>1:
-            storage[1].save_jobs_to_file(new_jobs[1], existing_links_matched_title)
-            existing_links_matched_title.update({job["link"] for job in new_jobs[1]})
         storage[0].save_jobs_to_file(new_jobs[0], existing_links)
         existing_links.update({job["link"] for job in new_jobs[0]})
         all_jobs.extend(new_jobs[0])
+        if len(new_jobs)>1:
+            # Filter out already-known jobs
+            new_jobs_skipped = [
+                job for job in new_jobs[1] if job["link"] not in existing_links_matched_title
+            ]
+            # Add new links to existing_links_matched_title
+            storage[1].save_jobs_to_file(new_jobs_skipped, existing_links_matched_title)
+            existing_links_matched_title.update({job["link"] for job in new_jobs_skipped})
         if not scraper.go_to_next_page():
             break
 
