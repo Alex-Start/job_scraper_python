@@ -43,6 +43,25 @@ class LinkedInJobScraper(BaseJobScraper):
         options.add_argument(f"--user-data-dir={self.PROFILE_DIR}")   # custom profile folder
         options.add_argument("--disable-blink-features=AutomationControlled")
         options.add_argument("--start-maximized")
+        # Disable WebRTC in ChromeDriver:
+        # DevTools listening on ws://127.0.0.1:52842/devtools/browser/841b3e6b-aab7-4a35-a953-3acfa5c7e45c
+        #[11644:12104:1118/142210.784:ERROR:services\network\p2p\socket_manager.cc:137] Failed to resolve address for stun.l.google.com., errorcode: -105
+        options.add_experimental_option("prefs", {
+            "webrtc.ip_handling_policy": "disable_non_proxied_udp",
+            "webrtc.multiple_routes_enabled": False})
+        # Disable log: [20788:5176:1118/142310.328:ERROR:services\device\usb\usb_descriptors.cc:142] Failed to read length for configuration 1.
+        options.add_argument("--disable-usb-discovery")
+        # disables Chrome notifications popups.
+        options.add_argument("--disable-notifications")
+        # disables the deprecated GCM/FCM features.
+        options.add_argument("--disable-gcm")
+
+        options.add_argument("--disable-gpu")
+        options.add_argument("--disable-software-rasterizer")
+        options.add_argument("--disable-extensions")
+        options.add_argument("--log-level=3")  # suppress INFO / WARNING messages
+        options.add_argument("--disable-dev-shm-usage")
+        options.add_experimental_option("excludeSwitches", ["enable-logging"])
 
         self.driver = webdriver.Chrome(options=options)
 
