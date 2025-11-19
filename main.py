@@ -1,4 +1,5 @@
 import argparse, sys
+from user_interaction import UserInteraction, ConsoleUserInteraction, GUIUserInteraction
 from linkedin_job_scraper import LinkedInJobScraper
 from dou_job_scraper import DouJobScraper
 from utils.filters import Filters
@@ -11,17 +12,17 @@ from logger import LoggerHelper
 
 LINKEDIN = "Linkedin_job"
 DOU = "Dou_job"
-INDEED = "Indeed_job (soon)"
+INDEED = "Indeed_job"
 SCRAPERS = {
     "1": (LINKEDIN, LinkedInJobScraper),
     "2": (DOU, DouJobScraper),
     "3": (INDEED, None),
 }
 
-def run_scraper(scraper, filters, storage, logger):
+def run_scraper(scraper, filters, storage, logger, user_interaction):
     driver = scraper.setup_driver()
 
-    input("👉 Log in if needed and press Enter...")
+    user_interaction.wait_for_user_login()
 
     existing_links = storage[0].load_existing_jobs()
     if len(storage)>1:
@@ -62,6 +63,10 @@ def createDouXhrLoadUrl(url):
 
     return new_url
 
+def is_gui_enabled(arg):
+    if arg is None:
+        return False
+    return arg.strip().lower() in ("yes", "true", "1", "y")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Job Scraper CLI")
@@ -74,7 +79,14 @@ if __name__ == "__main__":
         "-url",
         help="Base search URL to scrape",
     )
+    parser.add_argument(
+        "-gui",
+        help="yes/no, default: no",
+    )
     args = parser.parse_args()
+
+    # default: console
+    ui = ConsoleUserInteraction()
 
     # --- interactive fallback if no choice ---
     if not args.choice:
@@ -85,13 +97,15 @@ if __name__ == "__main__":
         choice = input("Enter choice: ")
         scraper_info = SCRAPERS.get(choice)
     else:
+        if is_gui_enabled(args.gui):
+            ui = GUIUserInteraction()
         scraper_info = None
         for _, (name, scraper_cls) in SCRAPERS.items():
             if name == args.choice:
                 scraper_info = (name, scraper_cls)
                 break
         else:
-            print(f"Incorrect choice: {args.choice}")
+            ui.show_message(f"Incorrect choice: {args.choice}")
             sys.exit()
 
     if scraper_info and scraper_info[1]:
@@ -117,13 +131,13 @@ if __name__ == "__main__":
         elif site_name == DOU.lower():
             filters.set_must_have_location(["віддалено"])
             search_url = args.url or "https://jobs.dou.ua/vacancies/?category=QA"
-            ajax_url = createDouXhrLoadUrl(args.url) or "https://jobs.dou.ua/vacancies/xhr-load/?category=QA" #TODO need to use args.url properly
+            ajax_url = createDouXhrLoadUrl(args.url) or "https://jobs.dou.ua/vacancies/xhr-load/?category=QA"
         else:
             sys.exit()
 
         storage = (Storage(logger, f"{site_name}.txt"), Storage(logger, f"{site_name}_matched_title.txt"))
         scraper = scraper_info[1](filters, logger)
         scraper.init_url(search_url, ajax_url)
-        run_scraper(scraper, filters, storage, logger)
+        run_scraper(scraper, filters, storage, logger, ui)
     else:
-        print("❌ Not implemented yet")
+        ui.show_message("❌ Not implemented yet")
