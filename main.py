@@ -2,6 +2,7 @@ import argparse, sys
 from user_interaction import UserInteraction, ConsoleUserInteraction, GUIUserInteraction
 from linkedin_job_scraper import LinkedInJobScraper
 from dou_job_scraper import DouJobScraper
+from djinni__job_scraper import DjinniJobScraper
 from utils.filters import Filters
 from utils.storage import Storage
 # from indeed_scraper import IndeedScraper  # future
@@ -12,11 +13,13 @@ from logger import LoggerHelper
 
 LINKEDIN = "Linkedin_job"
 DOU = "Dou_job"
+DJINNI = "Djinni_job"
 INDEED = "Indeed_job"
 SCRAPERS = {
     "1": (LINKEDIN, LinkedInJobScraper),
     "2": (DOU, DouJobScraper),
-    "3": (INDEED, None),
+    "3": (DJINNI, DjinniJobScraper),
+    "4": (INDEED, None),
 }
 
 def run_scraper(scraper, filters, storage, logger, user_interaction):
@@ -72,7 +75,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Job Scraper CLI")
     parser.add_argument(
         "-choice",
-        choices=[LINKEDIN, DOU, INDEED],
+        choices=[LINKEDIN, DOU, DJINNI, INDEED],
         help="Choose which scraper to use",
     )
     parser.add_argument(
@@ -132,6 +135,10 @@ if __name__ == "__main__":
             filters.set_must_have_location(["віддалено"])
             search_url = args.url or "https://jobs.dou.ua/vacancies/?category=QA"
             ajax_url = createDouXhrLoadUrl(args.url) or "https://jobs.dou.ua/vacancies/xhr-load/?category=QA"
+        elif site_name == DJINNI.lower():
+            filters.set_must_have_location(["Worldwide", "EU", "Full Remote"])
+            search_url = args.url or "https://djinni.co/jobs/?primary_keyword=QA&primary_keyword=QA%20Automation&employment=remote&region=eu"
+            ajax_url = ""
         else:
             sys.exit()
 

@@ -32,6 +32,7 @@ class DouJobScraper(BaseJobScraper):
     def init_url(self, search_url, ajax_url):
         self.SEARCH_URL = search_url
         self.AJAX_URL = ajax_url
+        self.logger.info(f"Search URL: {search_url}")
 
     def fetch_initial_page(self):
         """Load the first page and extract CSRF token."""
@@ -105,15 +106,16 @@ class DouJobScraper(BaseJobScraper):
 
         if not vacancies:
             self.logger.info("✅ No more vacancies found.")
-            return jobs
+            return (jobs, )
 
-        for vac in vacancies:
+        for i, vac in enumerate(vacancies):
+            self.logger.info("-----------")
             title_elem = vac.select_one("div.title a.vt")
             if not title_elem:
                 continue
 
             link = title_elem["href"].split("?")[0] if title_elem else None
-            if link in self.seen_links:
+            if not link or link in self.seen_links:
                 continue
             self.seen_links.add(link)
 
@@ -133,6 +135,10 @@ class DouJobScraper(BaseJobScraper):
             description = self.fetch_full_description(link)
             date_text = date.get_text(strip=True) if date else ""
 
+            self.logger.info(f"\n[{i+1}] {title} @ {company_name} info: {location} | {date_text} | {salary}")
+            self.logger.info(f"🔗 {link}")
+            self.logger.info(f"📄 Description (first 200 chars): {description[:200]}...")
+
             if not link or link in existing_links:
                 self.logger.info(f"⏭ Already processed: {title} @ {company_name}")
                 continue
@@ -143,10 +149,11 @@ class DouJobScraper(BaseJobScraper):
                 continue
 
             if not self.filters.job_matches_location(location):
-                self.logger.info(f"❌ {title} @ {company_name} : by location (skipped)")
+                self.logger.info(f"❌ {title} @ {company_name} in {location}: by location (skipped)")
                 continue
 
             if not self.filters.job_matches(description):
+                self.logger.info(f"[{i+1}] ❌ {title} @ {company_name} by description (skipped)")
                 continue
 
             job = {

@@ -25,10 +25,13 @@ class JobScraperGUI:
                         value="Linkedin_job").grid(row=0, column=0, padx=10)
 
         ttk.Radiobutton(radio_frame, text="DOU", variable=self.choice_var,
-                        value="Dou_job").grid(row=0, column=1, padx=10)
+                        value="Dou_job").grid(row=1, column=0, padx=10)
+        
+        ttk.Radiobutton(radio_frame, text="Djinni", variable=self.choice_var,
+                        value="Djinni_job").grid(row=2, column=0, padx=10)
 
         ttk.Radiobutton(radio_frame, text="Indeed", variable=self.choice_var,
-                        value="Indeed_job").grid(row=0, column=2, padx=10)
+                        value="Indeed_job").grid(row=3, column=0, padx=10)
 
         # -----------------------------
         # URL input
