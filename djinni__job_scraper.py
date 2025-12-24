@@ -48,6 +48,17 @@ class DjinniJobScraper:
         if resp.status_code != 200:
             self.logger.error(f"Failed to load page: {resp.status_code}")
             return None
+        if "has been blocked" in resp.text:
+            self.logger.error("🚫 Djinni blocked your IP")
+            return None
+        if resp.history:
+            self.logger.warning(
+                f"Redirected: {url} → {resp.url}"
+            )
+            return None
+        if "page=" not in resp.url:
+            self.logger.warning("⚠️ Page parameter missing in final URL")
+            return None
 
         return resp.text
 
@@ -151,6 +162,8 @@ class DjinniJobScraper:
         """Djinni uses ?page=2 pagination. We detect end by checking if jobs disappear."""
         self.page += 1
         self.html = self.fetch_page_html()
+        if not self.html:
+           return False
         soup = BeautifulSoup(self.html, "html.parser")
         vacancies = soup.select(self.VACANCY_CART)
         if not vacancies:
