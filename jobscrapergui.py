@@ -5,6 +5,9 @@ from logger import LoggerHelper
 import threading
 
 class JobScraperGUI:
+    def clear_url(self):
+        self.url_entry.delete(0, tk.END)
+
     def __init__(self, master):
         self.master = master
         self.master.title("Job Scraper GUI")
@@ -38,8 +41,18 @@ class JobScraperGUI:
         # -----------------------------
         ttk.Label(master, text="Start URL (optional):", font=("Arial", 12)).pack(pady=5)
 
-        self.url_entry = ttk.Entry(master, width=50)
-        self.url_entry.pack(pady=5)
+        url_frame = ttk.Frame(master)
+        url_frame.pack(pady=5)
+
+        self.url_entry = ttk.Entry(url_frame, width=40)
+        self.url_entry.grid(row=0, column=0, padx=(0, 5))
+
+        clear_button = ttk.Button(
+           url_frame,
+           text="Clear",
+           command=self.clear_url
+        )
+        clear_button.grid(row=0, column=1)
 
         # -----------------------------
         # Run Button
@@ -63,6 +76,7 @@ class JobScraperGUI:
 
         try:
             self.logger.info("Scraper is starting...")
+            self.run_button.config(state=tk.DISABLED)
 
             def stream_reader(stream, prefix):
                 for line in iter(stream.readline, ""):
@@ -89,6 +103,7 @@ class JobScraperGUI:
             t1.join()
             t2.join()
 
+            self.run_button.config(state=tk.NORMAL)
             messagebox.showinfo("Done", "Scraper has finished. Check console/log output.")
 
         except Exception as e:
