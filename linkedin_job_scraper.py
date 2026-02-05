@@ -164,7 +164,7 @@ class LinkedInJobScraper(BaseJobScraper):
             try:
                 self.logger.info("-----------")
                 self.driver.execute_script("arguments[0].scrollIntoView(true);", card)
-                human_delay(2, 4)
+                #human_delay(2, 4)
 
                 if not check_first and self.is_job_viewed(card):
                     self.logger.info("⏭️ Skipping already viewed job")
@@ -206,7 +206,7 @@ class LinkedInJobScraper(BaseJobScraper):
                 # --- Click to open job ---
                 self.driver.execute_script("arguments[0].click();", link_elem)
                 #card.click()
-                human_delay(3, 6)
+                human_delay(2, 5)
             
                 # wait for description to appear
                 job_desc_elem = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "div#job-details")))
@@ -228,7 +228,7 @@ class LinkedInJobScraper(BaseJobScraper):
                     self.logger.info(f"[{i+1}] ❌ {title} @ {company_name} (skipped)")
                     self.add_job(jobs_matched_title, title, company_name, location, description, link)
 
-                human_delay(5, 12)
+                human_delay(1, 3)
 
             except Exception as e:
                 self.logger.info(f"⚠️ Error reading job {i+1}: {e}")

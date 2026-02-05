@@ -26,12 +26,16 @@ def run_scraper(scraper, filters, storage, logger, user_interaction):
     driver = scraper.setup_driver()
 
     user_interaction.wait_for_user_login()
-
+    # fully matched jobs
     existing_links = storage[0].load_existing_jobs()
     if len(storage)>1:
+        # partialy matched - only title 
         existing_links_matched_title = storage[1].load_existing_jobs()
     all_jobs = []
+    page_index = 0
     while True:
+        page_index = page_index + 1
+        logger.info(f"-< Page {page_index} >-")
         new_jobs = scraper.scrape_jobs(existing_links)
         storage[0].save_jobs_to_file(new_jobs[0], existing_links)
         existing_links.update({job["link"] for job in new_jobs[0]})
@@ -115,7 +119,7 @@ if __name__ == "__main__":
         site_name = scraper_info[0].lower()
         logger = LoggerHelper.get_logger(scraper_info[0].lower())
 
-        MUST_HAVE_TITLE = ["Test Automation", "Quality Assurance", "Quality Engineer", r"\bQA\b", r"\bAQA\b", "QA Automation", "QA Tester", "Test Engineer", "in Test", "SDET", "Testing", "Automation Engineer"]
+        MUST_HAVE_TITLE = ["Test Automation", "Quality Assurance", "Quality Engineer", r"\bQA\b", r"\bAQA\b", "Test Analyst", "QA Tester", "Test Engineer", "in Test", "SDET", "Testing", "Automation Engineer"]
         EXCLUDE_TITLE = ["Python", "C#", "iOS", "JavaScript"]
         MUST_HAVE_TEXT = [r"\bJava\b"]  # regex with word boundary
         OPTIONAL_TEXT = [r"\bJava\b", "Cucumber", r"\bSQL\b", "API", "Selenium", "TestNG", "TeamCity"]
