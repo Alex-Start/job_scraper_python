@@ -22,7 +22,7 @@ SCRAPERS = {
     "4": (INDEED, None),
 }
 
-def run_scraper(scraper, filters, storage, logger, user_interaction):
+def run_scraper(scraper, storage, logger, user_interaction):
     driver = scraper.setup_driver()
 
     user_interaction.wait_for_user_login()
@@ -117,14 +117,14 @@ if __name__ == "__main__":
 
     if scraper_info and scraper_info[1]:
         site_name = scraper_info[0].lower()
-        logger = LoggerHelper.get_logger(scraper_info[0].lower())
+        logger_o = LoggerHelper.get_logger(scraper_info[0].lower())
 
         MUST_HAVE_TITLE = ["Test Automation", "Quality Assurance", "Quality Engineer", r"\bQA\b", r"\bAQA\b", "Test Analyst", "QA Tester", "Test Engineer", "in Test", "SDET", "Testing", "Automation Engineer"]
         EXCLUDE_TITLE = ["Python", "C#", "iOS", "JavaScript"]
         MUST_HAVE_TEXT = [r"\bJava\b"]  # regex with word boundary
         OPTIONAL_TEXT = [r"\bJava\b", "Cucumber", r"\bSQL\b", "API", "Selenium", "TestNG", "TeamCity"]
 
-        filters = Filters(logger)
+        filters = Filters(logger_o)
         filters.set_must_have_title(MUST_HAVE_TITLE)
         filters.set_exclude_title(EXCLUDE_TITLE)
         filters.set_must_have_text(MUST_HAVE_TEXT)
@@ -146,9 +146,9 @@ if __name__ == "__main__":
         else:
             sys.exit()
 
-        storage = (Storage(logger, f"{site_name}.txt"), Storage(logger, f"{site_name}_matched_title.txt"))
-        scraper = scraper_info[1](filters, logger)
-        scraper.init_url(search_url, ajax_url)
-        run_scraper(scraper, filters, storage, logger, ui)
+        storage_t = (Storage(logger_o, f"{site_name}.txt"), Storage(logger_o, f"{site_name}_matched_title.txt"))
+        scraper_o = scraper_info[1](filters, logger_o)
+        scraper_o.init_url(search_url, ajax_url)
+        run_scraper(scraper_o, storage_t, logger_o, ui)
     else:
         ui.show_message("❌ Not implemented yet")
