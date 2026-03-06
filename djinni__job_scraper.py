@@ -149,12 +149,12 @@ class DjinniJobScraper:
                 # Apply your filters
                 if not self.filters.job_matches_title(title):
                     self.logger.info(f"❌ {title} @ {company} : by title (skipped)")
-                    self.add_job(jobs_matched_title, title, company, info_items, description, link)
+                    self.add_job(jobs_matched_title, title, company, info_items, description, full_link)
                     continue
 
                 if not self.first_matching_location(info_items):
                     self.logger.info(f"❌ {title} @ {company} — locations {info_items} : by location (skipped)")
-                    self.add_job(jobs_matched_title, title, company, info_items, description, link)
+                    self.add_job(jobs_matched_title, title, company, info_items, description, full_link)
                     continue
 
                 # open the link to get full description
@@ -169,7 +169,7 @@ class DjinniJobScraper:
 
                 if not self.filters.job_matches(description):
                     self.logger.info(f"[{i+1}] ❌ {title} @ {company} by description (skipped)")
-                    self.add_job(jobs_matched_title, title, company, info_items, description, link)
+                    self.add_job(jobs_matched_title, title, company, info_items, description, full_link)
                     continue
 
                 job = {
